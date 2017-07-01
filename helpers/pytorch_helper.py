@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.metrics import fbeta_score
 import torch
 from torch.utils.data import Dataset
+import shutil
 
 class InstacartDataset(Dataset):
     """Custom class for our data."""
