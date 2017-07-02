@@ -7,15 +7,7 @@ import shutil
 class InstacartDataset(Dataset):
     """Custom class for our data."""
     def __init__(self, data_filename:str, labels_filename=None, transform=None):
-        try:
-            self.data = np.load(DATA_PATH+data_filename,mmap_mode='r')
-        except:
-            # This assumes that you'll only be using the full test data if it's not a .npy.
-            # Full test data was created as a memory map in Splitter_MemMap notebook.
-            # Hacky but it works for now.
-            
-            # TODO!!!!!: change this to fit Instacart data
-            self.data = np.memmap(DATA_PATH+data_filename, dtype='float32', shape=(61191, 128, 128, 3)) 
+        self.data = np.load(DATA_PATH+data_filename,mmap_mode='r')
         if labels_filename:
             self.labels = np.memmap(DATA_PATH+labels_filename, mmap_mode = 'r')
         else:
@@ -27,9 +19,9 @@ class InstacartDataset(Dataset):
     
     def __getitem__(self, index:int):
         try:
-            sample = {'features': self.data[index,:,:,:], 'target': self.labels[index]}
+            sample = {'features': self.data[:,index,:], 'target': self.labels[index]}
         except TypeError:
-            sample = {'features': self.data[index,:,:,:], 'target': self.labels}
+            sample = {'features': self.data[:,index,:], 'target': self.labels}
         if self.transform:
             sample = self.transform(sample)
         return sample
@@ -37,10 +29,11 @@ class InstacartDataset(Dataset):
 class ToTensor(object):
     """Transforms ndarrays in sample dict to torch.Tensor objects"""
     def __call__(self, sample):
-        try:            return {'features': torch.from_numpy(sample['features'].transpose((2,0,1))), 
+        try:
+            return {'features': torch.from_numpy(sample['features']), 
                 'target': torch.from_numpy(sample['target']).type(torch.FloatTensor)}
         except RuntimeError:
-            return {'features': torch.from_numpy(sample['features'].transpose((2,0,1))), 
+            return {'features': torch.from_numpy(sample['features']), 
                 'target': torch.Tensor()}
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
