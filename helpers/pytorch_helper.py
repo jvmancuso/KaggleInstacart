@@ -4,12 +4,14 @@ import torch
 from torch.utils.data import Dataset
 import shutil
 
+DATA_PATH = '../data/final/'
+
 class InstacartDataset(Dataset):
     """Custom class for our data."""
     def __init__(self, data_filename:str, labels_filename=None, transform=None):
         self.data = np.load(DATA_PATH+data_filename,mmap_mode='r')
         if labels_filename:
-            self.labels = np.memmap(DATA_PATH+labels_filename, mmap_mode = 'r')
+            self.labels = np.load(DATA_PATH+labels_filename, mmap_mode = 'r')
         else:
             self.labels = labels_filename
         self.transform = transform
