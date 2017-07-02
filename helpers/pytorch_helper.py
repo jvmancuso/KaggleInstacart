@@ -31,12 +31,11 @@ class InstacartDataset(Dataset):
 class ToTensor(object):
     """Transforms ndarrays in sample dict to torch.Tensor objects"""
     def __call__(self, sample):
-        try:
-            return {'features': torch.from_numpy(sample['features']), 
-                'target': torch.from_numpy(sample['target']).type(torch.FloatTensor)}
-        except RuntimeError:
-            return {'features': torch.from_numpy(sample['features']), 
-                'target': torch.Tensor()}
+        return {'features': torch.from_numpy(sample['features']), 
+                'target': torch.from_numpy(sample['target']).type(torch.DoubleTensor)}
+#        except RuntimeError:
+#            return {'features': torch.from_numpy(sample['features']), 
+#                'target': torch.Tensor()}
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
     """ Saves most recent model and best model. """
