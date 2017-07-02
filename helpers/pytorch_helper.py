@@ -21,9 +21,9 @@ class InstacartDataset(Dataset):
     
     def __getitem__(self, index:int):
         try:
-            sample = {'features': self.data[:,index,:], 'target': self.labels[index]}
+            sample = {'features': self.data[:,index,2:], 'target': self.labels[index,1:]}
         except TypeError:
-            sample = {'features': self.data[:,index,:], 'target': self.labels}
+            sample = {'features': self.data[:,index,2:], 'target': self.labels}
         if self.transform:
             sample = self.transform(sample)
         return sample
