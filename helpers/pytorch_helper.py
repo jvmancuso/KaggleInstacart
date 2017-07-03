@@ -17,7 +17,7 @@ class InstacartDataset(Dataset):
         self.transform = transform
         
     def __len__(self):
-        return len(self.data)
+        return self.data.shape[1]
     
     def __getitem__(self, index:int):
         try:
@@ -31,8 +31,8 @@ class InstacartDataset(Dataset):
 class ToTensor(object):
     """Transforms ndarrays in sample dict to torch.Tensor objects"""
     def __call__(self, sample):
-        return {'features': torch.from_numpy(sample['features']), 
-                'target': torch.from_numpy(sample['target']).type(torch.DoubleTensor)}
+        return {'features': torch.from_numpy(sample['features']).type(torch.FloatTensor), 
+                'target': torch.from_numpy(sample['target']).type(torch.FloatTensor)}
 #        except RuntimeError:
 #            return {'features': torch.from_numpy(sample['features']), 
 #                'target': torch.Tensor()}
